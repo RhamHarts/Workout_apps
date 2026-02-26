@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:test_app1/components/header.dart';
-import 'package:test_app1/stores/workout_stores.dart';
-import 'package:test_app1/theme.dart';
+import '../components/header.dart';
+import '../stores/workout_stores.dart';
+import '../theme.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,17 +19,23 @@ class HomePage extends StatelessWidget {
       body: ValueListenableBuilder(
         valueListenable: WorkoutStore.workouts,
         builder: (context, list, _) {
-          final grouped = WorkoutStore.grouped();
-
-          if (grouped.isEmpty) {
+          if (list.isEmpty) {
             return const Center(child: Text('No workout yet'));
           }
 
-          return ListView(
+          return ListView.builder(
             padding: const EdgeInsets.all(16),
-            children: grouped.entries.map((e) {
-              return _WorkoutCard(title: e.key, count: e.value);
-            }).toList(),
+            itemCount: list.length,
+            itemBuilder: (context, index) {
+              final item = list[index];
+
+              return _WorkoutCard(
+                title: item.title,
+                count: item.count,
+                onAdd: () => WorkoutStore.increment(index),
+                onDelete: () => WorkoutStore.deleteAt(index),
+              );
+            },
           );
         },
       ),
@@ -40,8 +46,15 @@ class HomePage extends StatelessWidget {
 class _WorkoutCard extends StatelessWidget {
   final String title;
   final int count;
+  final VoidCallback onAdd;
+  final VoidCallback onDelete;
 
-  const _WorkoutCard({required this.title, required this.count});
+  const _WorkoutCard({
+    required this.title,
+    required this.count,
+    required this.onAdd,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,17 +74,12 @@ class _WorkoutCard extends StatelessWidget {
               style: semibold14.copyWith(color: Colors.white, fontSize: 16),
             ),
           ),
-          _iconBtn(
-            icon: Icons.add,
-            color: blue1,
-            onTap: () => WorkoutStore.add(title),
-          ),
+
+          _iconBtn(icon: Icons.add, color: blue1, onTap: onAdd),
+
           const SizedBox(width: 10),
-          _iconBtn(
-            icon: Icons.delete,
-            color: Colors.red,
-            onTap: () => WorkoutStore.deleteAll(title),
-          ),
+
+          _iconBtn(icon: Icons.delete, color: Colors.red, onTap: onDelete),
         ],
       ),
     );

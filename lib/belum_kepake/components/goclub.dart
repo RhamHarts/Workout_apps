@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:test_app1/theme.dart';
 
 class GoCLub extends StatelessWidget {
-  const GoCLub({Key? key}) : super(key: key);
+  const GoCLub({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test_app1/stores/workout_stores.dart';
-import 'package:test_app1/theme.dart';
+import '../stores/workout_stores.dart';
+import '../theme.dart';
 
 class AddPage extends StatelessWidget {
-  const AddPage({Key? key}) : super(key: key);
+  const AddPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class AddPage extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
         onTap: () {
-          WorkoutStore.add(title); // 🔥 RAW ADD
+          WorkoutStore.add(title);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),

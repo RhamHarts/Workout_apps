@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:test_app1/theme.dart';
 
 class Search extends StatelessWidget {
-  const Search({Key? key}) : super(key: key);
+  const Search({super.key});
 
   @override
   Widget build(BuildContext context) {

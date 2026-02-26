@@ -1,4 +1,4 @@
-import 'package:test_app1/models/news.dart';
+import 'package:test_app1/belum_kepake/models/news.dart';
 
 List<News> news = [
   News(

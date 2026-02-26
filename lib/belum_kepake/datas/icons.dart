@@ -1,4 +1,4 @@
-import 'package:test_app1/models/gojek_icon.dart';
+import 'package:test_app1/belum_kepake/models/gojek_icon.dart';
 import 'package:test_app1/theme.dart';
 
 List<GojekIcon> gopayIcons = [

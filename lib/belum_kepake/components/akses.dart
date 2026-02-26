@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:test_app1/theme.dart';
 
 class Akses extends StatelessWidget {
-  const Akses({Key? key}) : super(key: key);
+  const Akses({super.key});
 
   @override
   Widget build(BuildContext context) {

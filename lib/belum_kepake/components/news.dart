@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:test_app1/datas/news.dart';
+import 'package:test_app1/belum_kepake/datas/news.dart';
 import 'package:test_app1/theme.dart';
 
 class News extends StatelessWidget {
-  const News({Key? key}) : super(key: key);
+  const News({super.key});
 
   @override
   Widget build(BuildContext context) {

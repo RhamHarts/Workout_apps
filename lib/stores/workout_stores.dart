@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
+import '../models/workout_item.dart';
 
 class WorkoutStore {
-  /// RAW LIST (TIDAK GROUP)
-  static final workouts = ValueNotifier<List<String>>([]);
+  static final workouts = ValueNotifier<List<WorkoutItem>>([]);
 
-  /// ADD RAW ITEM
+  /// ADD CARD BARU
   static void add(String title) {
-    workouts.value = [...workouts.value, title];
+    workouts.value = [...workouts.value, WorkoutItem(title: title, count: 1)];
   }
 
-  /// GROUPING UNTUK HOMEPAGE
-  static Map<String, int> grouped() {
-    final Map<String, int> map = {};
+  /// TAMBAH JUMLAH (x++)
+  static void increment(int index) {
+    final list = [...workouts.value];
+    final item = list[index];
 
-    for (final item in workouts.value) {
-      map[item] = (map[item] ?? 0) + 1;
-    }
-
-    return map;
+    list[index] = item.copyWith(count: item.count + 1);
+    workouts.value = list;
   }
 
-  /// DELETE SEMUA ITEM TITLE TERTENTU
-  static void deleteAll(String title) {
-    workouts.value = workouts.value.where((e) => e != title).toList();
+  /// DELETE CARD
+  static void deleteAt(int index) {
+    final list = [...workouts.value];
+    list.removeAt(index);
+    workouts.value = list;
+  }
+
+  static void clear() {
+    workouts.value = [];
   }
 }

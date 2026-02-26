@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:test_app1/datas/icons.dart';
+import 'package:test_app1/belum_kepake/datas/icons.dart';
 import 'package:test_app1/theme.dart';
 
 class Menus extends StatelessWidget {
-  const Menus({Key? key}) : super(key: key);
+  const Menus({super.key});
 
   @override
   Widget build(BuildContext context) {

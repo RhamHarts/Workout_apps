@@ -4,7 +4,7 @@ import 'package:test_app1/pages/add_page.dart';
 import 'package:test_app1/theme.dart';
 
 class Header extends StatelessWidget {
-  const Header({Key? key}) : super(key: key);
+  const Header({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +41,11 @@ class InvisibleAnimatedIconButton extends StatefulWidget {
   final VoidCallback onTap;
 
   const InvisibleAnimatedIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.color,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<InvisibleAnimatedIconButton> createState() =>

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:test_app1/theme.dart';
 
 class Gopay extends StatelessWidget {
-  const Gopay({Key? key}) : super(key: key);
+  const Gopay({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,11 +68,11 @@ class AnimatedIconButton extends StatefulWidget {
   final VoidCallback onTap;
 
   const AnimatedIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.color,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<AnimatedIconButton> createState() => _AnimatedIconButtonState();

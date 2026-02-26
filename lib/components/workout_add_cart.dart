@@ -6,8 +6,7 @@ class WorkoutAddCard extends StatelessWidget {
   final String title;
   final VoidCallback onAdd;
 
-  const WorkoutAddCard({Key? key, required this.title, required this.onAdd})
-    : super(key: key);
+  const WorkoutAddCard({super.key, required this.title, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class WorkoutAddCard extends StatelessWidget {
 class AnimatedAddButton extends StatefulWidget {
   final VoidCallback onTap;
 
-  const AnimatedAddButton({Key? key, required this.onTap}) : super(key: key);
+  const AnimatedAddButton({super.key, required this.onTap});
 
   @override
   State<AnimatedAddButton> createState() => _AnimatedAddButtonState();
