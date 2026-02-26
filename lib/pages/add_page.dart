@@ -13,6 +13,7 @@ class AddPage extends StatelessWidget {
         backgroundColor: dark1,
         elevation: 0,
         leading: IconButton(
+          color: dark4,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),

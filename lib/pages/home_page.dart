@@ -23,17 +23,24 @@ class HomePage extends StatelessWidget {
             return const Center(child: Text('No workout yet'));
           }
 
-          return ListView.builder(
+          return ReorderableListView.builder(
             padding: const EdgeInsets.all(16),
             itemCount: list.length,
+            onReorder: WorkoutStore.reorder,
+            buildDefaultDragHandles: false, // 🔥 MATIKAN HANDLE DEFAULT
             itemBuilder: (context, index) {
               final item = list[index];
 
-              return _WorkoutCard(
-                title: item.title,
-                count: item.count,
-                onAdd: () => WorkoutStore.increment(index),
-                onDelete: () => WorkoutStore.deleteAt(index),
+              return ReorderableDragStartListener(
+                key: ValueKey('${item.title}-$index'),
+                index: index,
+                child: _WorkoutCard(
+                  title: item.title,
+                  count: item.count,
+                  onAdd: () => WorkoutStore.increment(index),
+                  onMinus: () => WorkoutStore.decrement(index),
+                  onDelete: () => WorkoutStore.deleteAt(index),
+                ),
               );
             },
           );
@@ -47,12 +54,15 @@ class _WorkoutCard extends StatelessWidget {
   final String title;
   final int count;
   final VoidCallback onAdd;
+  final VoidCallback onMinus;
   final VoidCallback onDelete;
 
   const _WorkoutCard({
+    super.key,
     required this.title,
     required this.count,
     required this.onAdd,
+    required this.onMinus,
     required this.onDelete,
   });
 
@@ -75,9 +85,11 @@ class _WorkoutCard extends StatelessWidget {
             ),
           ),
 
-          _iconBtn(icon: Icons.add, color: blue1, onTap: onAdd),
+          _iconBtn(icon: Icons.remove, color: Colors.orange, onTap: onMinus),
+          const SizedBox(width: 6),
 
-          const SizedBox(width: 10),
+          _iconBtn(icon: Icons.add, color: blue1, onTap: onAdd),
+          const SizedBox(width: 6),
 
           _iconBtn(icon: Icons.delete, color: Colors.red, onTap: onDelete),
         ],
@@ -94,13 +106,13 @@ class _WorkoutCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       onTap: onTap,
       child: Container(
-        width: 38,
-        height: 38,
+        width: 34,
+        height: 34,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(icon, color: color, size: 20),
+        child: Icon(icon, color: color, size: 18),
       ),
     );
   }
