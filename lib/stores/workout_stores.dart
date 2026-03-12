@@ -1,52 +1,47 @@
 import 'package:flutter/material.dart';
-import '../models/workout_item.dart';
+import 'package:test_app1/models/workout_item.dart';
+import 'package:uuid/uuid.dart';
 
 class WorkoutStore {
+  static final _uuid = Uuid();
+
   static final workouts = ValueNotifier<List<WorkoutItem>>([]);
 
-  /// ADD CARD BARU
   static void add(String title) {
-    workouts.value = [...workouts.value, WorkoutItem(title: title, count: 1)];
+    workouts.value = [
+      ...workouts.value,
+      WorkoutItem(id: _uuid.v4(), title: title),
+    ];
   }
 
-  /// TAMBAH JUMLAH (++)
-  static void increment(int index) {
-    final list = [...workouts.value];
-    final item = list[index];
-
-    list[index] = item.copyWith(count: item.count + 1);
-    workouts.value = list;
+  static void delete(String id) {
+    workouts.value = workouts.value.where((e) => e.id != id).toList();
   }
 
-  /// KURANGI JUMLAH (--), MINIMAL 1
-  static void decrement(int index) {
-    final list = [...workouts.value];
-    final item = list[index];
-
-    if (item.count > 1) {
-      list[index] = item.copyWith(count: item.count - 1);
-      workouts.value = list;
-    }
+  static void update(WorkoutItem item) {
+    workouts.value = workouts.value.map((e) {
+      if (e.id == item.id) return item;
+      return e;
+    }).toList();
   }
 
-  /// DELETE CARD
-  static void deleteAt(int index) {
-    final list = [...workouts.value];
-    list.removeAt(index);
-    workouts.value = list;
+  static void increment(String id) {
+    workouts.value = workouts.value.map((e) {
+      if (e.id == id) e.value += 1;
+      return e;
+    }).toList();
   }
 
-  static void clear() {
-    workouts.value = [];
+  static void decrement(String id) {
+    workouts.value = workouts.value.map((e) {
+      if (e.id == id && e.value > 1) e.value -= 1;
+      return e;
+    }).toList();
   }
 
-  /// REORDER LIST (DRAG & DROP)
   static void reorder(int oldIndex, int newIndex) {
     final list = [...workouts.value];
-
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
+    if (newIndex > oldIndex) newIndex -= 1;
 
     final item = list.removeAt(oldIndex);
     list.insert(newIndex, item);

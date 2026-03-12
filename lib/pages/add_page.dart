@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import '../stores/workout_stores.dart';
-import '../theme.dart';
+import 'package:test_app1/pages/exercise_detail_page.dart';
+import 'package:test_app1/stores/workout_stores.dart';
+import 'package:test_app1/theme.dart';
+import 'package:test_app1/models/workout_item.dart';
 
 class AddPage extends StatelessWidget {
   const AddPage({super.key});
@@ -13,7 +15,6 @@ class AddPage extends StatelessWidget {
         backgroundColor: dark1,
         elevation: 0,
         leading: IconButton(
-          color: dark4,
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
@@ -25,16 +26,16 @@ class AddPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _item('Push Up'),
-          _item('Sit Up'),
-          _item('Pull Up'),
-          _item('Squat'),
+          _item(context, 'Push Up'),
+          _item(context, 'Sit Up'),
+          _item(context, 'Pull Up'),
+          _item(context, 'Squat'),
         ],
       ),
     );
   }
 
-  Widget _item(String title) {
+  Widget _item(BuildContext context, String title) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       height: 60,
@@ -42,25 +43,45 @@ class AddPage extends StatelessWidget {
         color: blue1,
         borderRadius: BorderRadius.circular(14),
       ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(14),
-        onTap: () {
-          WorkoutStore.add(title);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  title,
-                  style: semibold14.copyWith(color: Colors.white, fontSize: 16),
+      child: Row(
+        children: [
+          /// TAP AREA → DETAIL PAGE
+          Expanded(
+            child: InkWell(
+              borderRadius: BorderRadius.circular(14),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        ExerciseDetailPage(item: WorkoutItem.create(title)),
+                  ),
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    title,
+                    style: semibold14.copyWith(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
-              const Icon(Icons.add, color: Colors.white),
-            ],
+            ),
           ),
-        ),
+
+          /// ICON PLUS → ADD WORKOUT (DEFAULT 10x)
+          IconButton(
+            icon: const Icon(Icons.add, color: Colors.white),
+            onPressed: () {
+              WorkoutStore.add(title);
+            },
+          ),
+        ],
       ),
     );
   }

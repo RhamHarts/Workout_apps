@@ -1,119 +1,90 @@
 import 'package:flutter/material.dart';
-import '../components/header.dart';
-import '../stores/workout_stores.dart';
-import '../theme.dart';
+import 'package:test_app1/stores/workout_stores.dart';
+import 'package:test_app1/models/workout_item.dart';
+import 'exercise_detail_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: dark1,
-        elevation: 0,
-        toolbarHeight: 71,
-        title: const Header(),
-      ),
-      body: ValueListenableBuilder(
-        valueListenable: WorkoutStore.workouts,
-        builder: (context, list, _) {
-          if (list.isEmpty) {
-            return const Center(child: Text('No workout yet'));
-          }
+    return ValueListenableBuilder<List<WorkoutItem>>(
+      valueListenable: WorkoutStore.workouts,
+      builder: (_, list, __) {
+        return ReorderableListView.builder(
+          itemCount: list.length,
+          onReorder: WorkoutStore.reorder,
+          buildDefaultDragHandles: false,
+          itemBuilder: (context, index) {
+            final item = list[index];
 
-          return ReorderableListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: list.length,
-            onReorder: WorkoutStore.reorder,
-            buildDefaultDragHandles: false, // 🔥 MATIKAN HANDLE DEFAULT
-            itemBuilder: (context, index) {
-              final item = list[index];
+            return GestureDetector(
+              key: ValueKey(item.id),
+              onTap: () async {
+                final updated = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ExerciseDetailPage(item: item),
+                  ),
+                );
 
-              return ReorderableDragStartListener(
-                key: ValueKey('${item.title}-$index'),
+                if (updated != null) {
+                  WorkoutStore.update(updated);
+                }
+              },
+              child: ReorderableDelayedDragStartListener(
                 index: index,
-                child: _WorkoutCard(
-                  title: item.title,
-                  count: item.count,
-                  onAdd: () => WorkoutStore.increment(index),
-                  onMinus: () => WorkoutStore.decrement(index),
-                  onDelete: () => WorkoutStore.deleteAt(index),
+                child: Card(
+                  margin: const EdgeInsets.all(12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                item.title,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                item.mode == WorkoutMode.reps
+                                    ? "${item.value}x"
+                                    : "${item.value}s",
+                                style: const TextStyle(fontSize: 14),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () => WorkoutStore.decrement(item.id),
+                        ),
+
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () => WorkoutStore.increment(item.id),
+                        ),
+
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => WorkoutStore.delete(item.id),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              );
-            },
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _WorkoutCard extends StatelessWidget {
-  final String title;
-  final int count;
-  final VoidCallback onAdd;
-  final VoidCallback onMinus;
-  final VoidCallback onDelete;
-
-  const _WorkoutCard({
-    super.key,
-    required this.title,
-    required this.count,
-    required this.onAdd,
-    required this.onMinus,
-    required this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      height: 60,
-      decoration: BoxDecoration(
-        color: blue1,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              '$title x$count',
-              style: semibold14.copyWith(color: Colors.white, fontSize: 16),
-            ),
-          ),
-
-          _iconBtn(icon: Icons.remove, color: Colors.orange, onTap: onMinus),
-          const SizedBox(width: 6),
-
-          _iconBtn(icon: Icons.add, color: blue1, onTap: onAdd),
-          const SizedBox(width: 6),
-
-          _iconBtn(icon: Icons.delete, color: Colors.red, onTap: onDelete),
-        ],
-      ),
-    );
-  }
-
-  Widget _iconBtn({
-    required IconData icon,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(8),
-      onTap: onTap,
-      child: Container(
-        width: 34,
-        height: 34,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(icon, color: color, size: 18),
-      ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
